@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { PackageGoalKey } from '../../types'
 import { useApp, useToast } from '../../state/AppContext'
 import { generatePackagePlan, generateContentPlan } from '../../ai'
+import { createContentPlan, createPackagePlan } from '../../api/client'
 import { GoalPicker } from './GoalPicker'
 import { PackagePlanCard } from './PackagePlanCard'
 import { EmptyState } from '../../components/ui/EmptyState'
@@ -13,22 +14,33 @@ export function PackagePage() {
 
   const handlePick = async (goal: PackageGoalKey) => {
     setLoadingGoal(goal)
-    const plan = await generatePackagePlan({ storeId: state.currentStoreId, goal })
-    dispatch({ type: 'ADD_PACKAGE_PLAN', plan })
-    setLoadingGoal(null)
+    try {
+      const generated = await generatePackagePlan({ storeId: state.currentStoreId, goal })
+      const saved = await createPackagePlan(state.currentStoreId, generated)
+      dispatch({ type: 'ADD_PACKAGE_PLAN', plan: saved })
+    } catch {
+      toast('生成失败，请重试', 'error')
+    } finally {
+      setLoadingGoal(null)
+    }
   }
 
   const handleGenerateContent = async (planId: string) => {
     const plan = state.packagePlans.find((p) => p.id === planId)
     if (!plan) return
-    const content = await generateContentPlan({
-      storeId: state.currentStoreId,
-      promotionObject: plan.name,
-      platforms: plan.platform,
-    })
-    dispatch({ type: 'ADD_CONTENT_PLAN', plan: content })
-    dispatch({ type: 'SET_TAB', tab: 'content' })
-    toast('推广内容已生成，可在内容页面查看', 'info')
+    try {
+      const generated = await generateContentPlan({
+        storeId: state.currentStoreId,
+        promotionObject: plan.name,
+        platforms: plan.platform,
+      })
+      const saved = await createContentPlan(state.currentStoreId, generated)
+      dispatch({ type: 'ADD_CONTENT_PLAN', plan: saved })
+      dispatch({ type: 'SET_TAB', tab: 'content' })
+      toast('推广内容已生成，可在内容页面查看', 'info')
+    } catch {
+      toast('生成推广内容失败，请重试', 'error')
+    }
   }
 
   return (

@@ -1,5 +1,6 @@
 import type { Task } from '../../types'
-import { useApp } from '../../state/AppContext'
+import { useApp, useToast } from '../../state/AppContext'
+import { patchTaskStatus } from '../../api/client'
 import { Card } from '../ui/Card'
 import { Badge } from '../ui/Badge'
 
@@ -14,12 +15,24 @@ const SOURCE_LABELS: Record<Task['source'], string> = {
 
 export function TaskCard({ task }: { task: Task }) {
   const { dispatch } = useApp()
+  const toast = useToast()
   const done = task.status === 'done'
+
+  const handleToggle = async () => {
+    // Optimistic: flip immediately for a snappy checkbox, roll back on failure.
+    dispatch({ type: 'TOGGLE_TASK_STATUS', taskId: task.id })
+    try {
+      await patchTaskStatus(task.id, done ? 'pending' : 'done')
+    } catch {
+      dispatch({ type: 'TOGGLE_TASK_STATUS', taskId: task.id })
+      toast('更新任务状态失败，请重试', 'error')
+    }
+  }
 
   return (
     <Card className="flex items-start gap-3">
       <button
-        onClick={() => dispatch({ type: 'TOGGLE_TASK_STATUS', taskId: task.id })}
+        onClick={handleToggle}
         className={`mt-0.5 h-5 w-5 shrink-0 rounded-full border-2 ${
           done ? 'border-positive bg-positive' : 'border-line'
         }`}

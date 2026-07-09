@@ -1,9 +1,8 @@
-import type { LaunchFormInput } from '../../../types'
+import type { LaunchFormInput, Store } from '../../../types'
 import { Input } from '../../../components/ui/Input'
 import { Select } from '../../../components/ui/Select'
 import { ChipGroup } from '../../../components/ui/Chip'
 import { DISH_TYPE_LABEL, AUDIENCE_LABEL, GOAL_LABEL, PLATFORM_LABEL } from '../../../mock/copyBank'
-import { MOCK_STORES } from '../../../mock/stores'
 
 const DISH_TYPE_OPTIONS = Object.entries(DISH_TYPE_LABEL).map(([value, label]) => ({ value, label }))
 const COST_LEVEL_OPTIONS = [
@@ -27,9 +26,11 @@ const PLATFORM_OPTIONS = Object.entries(PLATFORM_LABEL).map(([value, label]) => 
 export function RequiredFields({
   draft,
   onPatch,
+  stores,
 }: {
   draft: LaunchFormInput
   onPatch: (patch: Partial<LaunchFormInput>) => void
+  stores: Store[]
 }) {
   return (
     <div className="flex flex-col gap-4">
@@ -67,7 +68,7 @@ export function RequiredFields({
       <Select
         label="目标门店"
         required
-        options={MOCK_STORES.map((s) => ({ value: s.id, label: s.name }))}
+        options={stores.map((s) => ({ value: s.id, label: s.name }))}
         value={draft.storeId}
         onChange={(e) => onPatch({ storeId: e.target.value })}
       />

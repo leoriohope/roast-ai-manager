@@ -1,14 +1,15 @@
 import { useState } from 'react'
-import { useApp } from '../../state/AppContext'
+import { useApp, useToast } from '../../state/AppContext'
 import { generateAssistantReply } from '../../ai'
 import { delay } from '../../ai/randomUtils'
-import { uid } from '../../utils/id'
+import { createChatMessage } from '../../api/client'
 import { ChatBubble } from './ChatBubble'
 import { QuickQuestionChips } from './QuickQuestionChips'
 import { Button } from '../../components/ui/Button'
 
 export function AssistantPage() {
   const { state, dispatch } = useApp()
+  const toast = useToast()
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
 
@@ -16,23 +17,22 @@ export function AssistantPage() {
     const trimmed = text.trim()
     if (!trimmed || sending) return
 
-    dispatch({
-      type: 'ADD_CHAT_MESSAGE',
-      message: { id: uid('msg'), role: 'user', content: trimmed, createdAt: new Date().toISOString() },
-    })
     setInput('')
     setSending(true)
-    await delay(500)
-    dispatch({
-      type: 'ADD_CHAT_MESSAGE',
-      message: {
-        id: uid('msg'),
+    try {
+      const userMessage = await createChatMessage({ role: 'user', content: trimmed })
+      dispatch({ type: 'ADD_CHAT_MESSAGE', message: userMessage })
+      await delay(500)
+      const assistantMessage = await createChatMessage({
         role: 'assistant',
         content: generateAssistantReply(trimmed),
-        createdAt: new Date().toISOString(),
-      },
-    })
-    setSending(false)
+      })
+      dispatch({ type: 'ADD_CHAT_MESSAGE', message: assistantMessage })
+    } catch {
+      toast('发送失败，请重试', 'error')
+    } finally {
+      setSending(false)
+    }
   }
 
   return (

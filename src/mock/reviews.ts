@@ -3,7 +3,7 @@ import type { Review } from '../types'
 export const MOCK_REVIEWS: Review[] = [
   {
     id: 'rv-1',
-    storeId: 'store-cs',
+    storeId: 'store-hq',
     author: '吃货小美',
     rating: 5,
     content: '烤五花肉太香了，肉很嫩，服务态度也很好，适合朋友聚会。',
@@ -14,7 +14,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-2',
-    storeId: 'store-cs',
+    storeId: 'store-hq',
     author: '阿强',
     rating: 2,
     content: '周五晚上人太多了，等位等了40分钟，上菜也慢。',
@@ -25,7 +25,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-3',
-    storeId: 'store-cs',
+    storeId: 'store-fml',
     author: 'Lulu',
     rating: 4,
     content: '氛围很好，适合和朋友小聚，就是价格比预期稍微贵一点。',
@@ -36,7 +36,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-4',
-    storeId: 'store-tql',
+    storeId: 'store-fml',
     author: '成都吃客',
     rating: 5,
     content: '牛肉很新鲜，锁鲜现烤，环境也不错，服务很周到。',
@@ -47,7 +47,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-5',
-    storeId: 'store-tql',
+    storeId: 'store-hy',
     author: '匿名用户',
     rating: 2,
     content: '排队等了半小时，服务员态度一般，上菜也慢。',
@@ -58,10 +58,10 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-6',
-    storeId: 'store-tql',
+    storeId: 'store-hy',
     author: '小鹿',
     rating: 5,
-    content: '太古里店环境真的很出片，适合拍照，肉的口感也很好。',
+    content: '和悦店环境真的很出片，适合拍照，肉的口感也很好。',
     sentiment: 'positive',
     keywords: ['氛围好', '肉质嫩'],
     createdAt: '2026-06-30T20:15:00+08:00',
@@ -69,7 +69,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-7',
-    storeId: 'store-jsl',
+    storeId: 'store-dyc',
     author: '老王',
     rating: 3,
     content: '味道可以，就是有点小贵，性价比一般。',
@@ -80,8 +80,8 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-8',
-    storeId: 'store-jsl',
-    author: '建设路老饕',
+    storeId: 'store-dyc',
+    author: '大悦城常客',
     rating: 5,
     content: '家庭聚餐很合适，服务好，小孩也喜欢吃。',
     sentiment: 'positive',
@@ -91,7 +91,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-9',
-    storeId: 'store-gxq',
+    storeId: 'store-lhsc',
     author: '程序员小李',
     rating: 4,
     content: '下班后和同事一起吃，氛围轻松，肉质也不错。',
@@ -102,7 +102,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-10',
-    storeId: 'store-gxq',
+    storeId: 'store-lhsc',
     author: '匿名用户',
     rating: 2,
     content: '晚高峰上菜太慢了，等了快一小时才上齐。',
@@ -113,7 +113,7 @@ export const MOCK_REVIEWS: Review[] = [
   },
   {
     id: 'rv-11',
-    storeId: 'store-gxq',
+    storeId: 'store-sxtj',
     author: 'Tina',
     rating: 5,
     content: '服务很贴心，主动推荐了新品，味道很惊喜。',

@@ -1,13 +1,14 @@
+import { Bot, Gift, Home, MessageCircle, PenLine, Sparkles, Stethoscope, type LucideIcon } from 'lucide-react'
 import type { TabKey } from '../../state/appReducer'
 
-const TABS: { key: TabKey; label: string; icon: string }[] = [
-  { key: 'today', label: '今天', icon: '🏠' },
-  { key: 'launch', label: '上新', icon: '🆕' },
-  { key: 'checkup', label: '体检', icon: '🩺' },
-  { key: 'package', label: '套餐', icon: '🎁' },
-  { key: 'content', label: '内容', icon: '📝' },
-  { key: 'review', label: '评价', icon: '💬' },
-  { key: 'assistant', label: 'AI', icon: '🤖' },
+const TABS: { key: TabKey; label: string; Icon: LucideIcon }[] = [
+  { key: 'today', label: '今天', Icon: Home },
+  { key: 'launch', label: '上新', Icon: Sparkles },
+  { key: 'checkup', label: '体检', Icon: Stethoscope },
+  { key: 'package', label: '套餐', Icon: Gift },
+  { key: 'content', label: '内容', Icon: PenLine },
+  { key: 'review', label: '评价', Icon: MessageCircle },
+  { key: 'assistant', label: 'AI', Icon: Bot },
 ]
 
 export function BottomNav({
@@ -25,11 +26,11 @@ export function BottomNav({
           <button
             key={tab.key}
             onClick={() => onChange(tab.key)}
-            className={`flex flex-col items-center gap-0.5 py-2.5 text-[11px] ${
+            className={`flex flex-col items-center gap-1 py-2.5 text-[11px] ${
               active ? 'text-primary' : 'text-ink-faint'
             }`}
           >
-            <span className="text-lg leading-none">{tab.icon}</span>
+            <tab.Icon size={22} strokeWidth={active ? 2.25 : 1.75} />
             {tab.label}
           </button>
         )

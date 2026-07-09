@@ -9,7 +9,7 @@ export interface RecommendedTask {
   id: string
   title: string
   description: string
-  actionTab: 'launch' | 'package' | 'content' | 'review'
+  actionTab: 'launch' | 'package' | 'content' | 'review' | 'checkup'
 }
 
 export interface TodaySummary {

@@ -9,9 +9,11 @@
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p api/tsconfig.json",
     "db:migrate": "tsx db/migrate.ts",
-    "db:seed": "tsx db/seed.ts"
+    "db:seed": "tsx db/seed.ts",
+    "db:reset": "tsx db/reset.ts"
   },
   "dependencies": {
+    "lucide-react": "^1.24.0",
     "postgres": "^3.4.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

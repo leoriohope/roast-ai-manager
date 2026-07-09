@@ -8,6 +8,7 @@ const ACTION_LABELS: Record<RecommendedTask['actionTab'], string> = {
   package: '去设计',
   content: '去生成',
   review: '去处理',
+  checkup: '去查看',
 }
 
 export function RecommendedTasksCard({ tasks }: { tasks: RecommendedTask[] }) {

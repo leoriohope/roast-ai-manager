@@ -1,5 +1,4 @@
-import { DEFAULT_STORE_ID, MOCK_STORES } from '../mock/stores'
-import { MOCK_REVIEWS } from '../mock/reviews'
+import { DEFAULT_STORE_ID } from '../mock/stores'
 import type { LaunchFormInput } from '../types'
 import type { AppState } from './appReducer'
 
@@ -25,15 +24,17 @@ export const EMPTY_LAUNCH_DRAFT: LaunchFormInput = {
   reviewScreenshot: null,
 }
 
+// stores/reviews/launchResults/packagePlans/contentPlans/tasks/chatHistory all
+// start empty and are filled in by AppContext's API bootstrap on mount.
 export const initialState: AppState = {
   currentStoreId: DEFAULT_STORE_ID,
   currentTab: 'today',
-  stores: MOCK_STORES,
+  stores: [],
   launchDraft: EMPTY_LAUNCH_DRAFT,
   launchResults: [],
   packagePlans: [],
   contentPlans: [],
-  reviews: MOCK_REVIEWS,
+  reviews: [],
   reviewAnalysisByStore: {},
   tasks: [],
   chatHistory: [],

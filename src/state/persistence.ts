@@ -1,21 +1,14 @@
 import type { AppState } from './appReducer'
 
-const STORAGE_KEY = 'roast-ai-manager:state'
+// Everything else now lives in the database (see src/api/client.ts) and is
+// fetched on bootstrap in AppContext.tsx. Only per-browser UI state stays here:
+// which store you're looking at and an in-progress, unsubmitted form draft —
+// neither has product value synced across devices.
+const STORAGE_KEY = 'roast-ai-manager:local'
 
-type PersistedState = Pick<
-  AppState,
-  'currentStoreId' | 'launchDraft' | 'launchResults' | 'packagePlans' | 'contentPlans' | 'tasks' | 'chatHistory'
->
+type PersistedState = Pick<AppState, 'currentStoreId' | 'launchDraft'>
 
-const PERSISTED_KEYS: (keyof PersistedState)[] = [
-  'currentStoreId',
-  'launchDraft',
-  'launchResults',
-  'packagePlans',
-  'contentPlans',
-  'tasks',
-  'chatHistory',
-]
+const PERSISTED_KEYS: (keyof PersistedState)[] = ['currentStoreId', 'launchDraft']
 
 export function loadPersisted(): Partial<AppState> {
   try {

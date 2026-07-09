@@ -1,14 +1,28 @@
+import { useEffect, useState } from 'react'
+import type { StoreCheckup } from '../../types'
 import { useApp } from '../../state/AppContext'
-import { MOCK_CHECKUPS } from '../../mock/checkupData'
+import { getCheckup } from '../../api/client'
 import { HealthScoreCard } from './HealthScoreCard'
 import { IssueCard } from './IssueCard'
 import { WeeklySuggestionsCard } from './WeeklySuggestionsCard'
+import { EmptyState } from '../../components/ui/EmptyState'
 
 export function StoreCheckupPage() {
   const { state } = useApp()
-  const checkup = MOCK_CHECKUPS[state.currentStoreId]
+  const [checkup, setCheckup] = useState<StoreCheckup | null>(null)
 
-  if (!checkup) return null
+  useEffect(() => {
+    let cancelled = false
+    setCheckup(null)
+    getCheckup(state.currentStoreId).then((result) => {
+      if (!cancelled) setCheckup(result)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [state.currentStoreId])
+
+  if (!checkup) return <EmptyState text="加载中…" />
 
   return (
     <div className="flex flex-col gap-4">

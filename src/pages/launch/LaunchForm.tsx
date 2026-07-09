@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { LaunchFormInput } from '../../types'
+import type { LaunchFormInput, Store } from '../../types'
 import { Card } from '../../components/ui/Card'
 import { Button } from '../../components/ui/Button'
 import { RequiredFields } from './LaunchFormFields/RequiredFields'
@@ -22,11 +22,13 @@ export function LaunchForm({
   onPatch,
   onSubmit,
   submitting,
+  stores,
 }: {
   draft: LaunchFormInput
   onPatch: (patch: Partial<LaunchFormInput>) => void
   onSubmit: () => void
   submitting: boolean
+  stores: Store[]
 }) {
   const [showOptional, setShowOptional] = useState(false)
   const valid = isValid(draft)
@@ -35,7 +37,7 @@ export function LaunchForm({
     <div className="flex flex-col gap-4">
       <Card>
         <p className="mb-3 text-sm font-medium text-ink">基本信息</p>
-        <RequiredFields draft={draft} onPatch={onPatch} />
+        <RequiredFields draft={draft} onPatch={onPatch} stores={stores} />
       </Card>
 
       <Card>

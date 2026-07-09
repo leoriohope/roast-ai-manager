@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react'
+import type { TodaySummary } from '../../types'
 import { useApp } from '../../state/AppContext'
-import { MOCK_TODAY_SUMMARIES } from '../../mock/todaySummary'
+import { getTodaySummary } from '../../api/client'
 import { TodaySummaryCard } from './TodaySummaryCard'
 import { RecommendedTasksCard } from './RecommendedTasksCard'
 import { WeeklyMetricsCard } from './WeeklyMetricsCard'
@@ -8,10 +10,21 @@ import { EmptyState } from '../../components/ui/EmptyState'
 
 export function TodayPage() {
   const { state } = useApp()
-  const summary = MOCK_TODAY_SUMMARIES[state.currentStoreId]
+  const [summary, setSummary] = useState<TodaySummary | null>(null)
   const storeTasks = state.tasks.filter((t) => t.storeId === state.currentStoreId)
 
-  if (!summary) return null
+  useEffect(() => {
+    let cancelled = false
+    setSummary(null)
+    getTodaySummary(state.currentStoreId).then((result) => {
+      if (!cancelled) setSummary(result)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [state.currentStoreId])
+
+  if (!summary) return <EmptyState text="加载中…" />
 
   return (
     <div className="flex flex-col gap-4">

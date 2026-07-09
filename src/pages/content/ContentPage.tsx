@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Platform } from '../../types'
 import { useApp, useToast } from '../../state/AppContext'
 import { generateContentPlan } from '../../ai'
-import { uid } from '../../utils/id'
+import { createContentPlan, createTask } from '../../api/client'
 import { ContentForm } from './ContentForm'
 import { ContentResultCard } from './ContentResultCard'
 import { EmptyState } from '../../components/ui/EmptyState'
@@ -16,25 +16,31 @@ export function ContentPage() {
 
   const handleSubmit = async () => {
     setSubmitting(true)
-    const plan = await generateContentPlan({ storeId: state.currentStoreId, promotionObject, platforms })
-    dispatch({ type: 'ADD_CONTENT_PLAN', plan })
-    setSubmitting(false)
+    try {
+      const generated = await generateContentPlan({ storeId: state.currentStoreId, promotionObject, platforms })
+      const saved = await createContentPlan(state.currentStoreId, generated)
+      dispatch({ type: 'ADD_CONTENT_PLAN', plan: saved })
+    } catch {
+      toast('生成失败，请重试', 'error')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
-  const handleSaveTask = (label: string, text: string) => {
-    dispatch({
-      type: 'ADD_TASK',
-      task: {
-        id: uid('task'),
+  const handleSaveTask = async (label: string, text: string) => {
+    try {
+      const task = await createTask({
         title: `发布${label}：${promotionObject || '推广内容'}`,
         description: text,
         source: 'content',
         storeId: state.currentStoreId,
         status: 'pending',
-        createdAt: new Date().toISOString(),
-      },
-    })
-    toast('已加入今日任务')
+      })
+      dispatch({ type: 'ADD_TASK', task })
+      toast('已加入今日任务')
+    } catch {
+      toast('添加任务失败，请重试', 'error')
+    }
   }
 
   return (

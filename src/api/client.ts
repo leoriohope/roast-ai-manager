@@ -2,7 +2,9 @@ import type {
   BrandStyleProfile,
   BrandStyleProfileDraft,
   ChatMessage,
+  ContentCopyDraft,
   ContentPlan,
+  ContentPlanInput,
   ImageProvider,
   LaunchContentDraft,
   LaunchFormInput,
@@ -70,6 +72,11 @@ export const createPackagePlan = (storeId: string, plan: PackagePlan) =>
 export const getContentPlans = () => request<ContentPlan[]>('/content-plans')
 export const createContentPlan = (storeId: string, plan: ContentPlan) =>
   request<ContentPlan>('/content-plans', { method: 'POST', body: JSON.stringify({ storeId, ...plan }) })
+
+// src/ai/generateContentPlan.ts wraps this with a try/catch that falls back
+// to local per-platform templates on failure, same pattern as launch content.
+export const requestContentCopy = (input: ContentPlanInput) =>
+  request<ContentCopyDraft>('/content-plans', { method: 'PATCH', body: JSON.stringify(input) })
 
 export const getChatMessages = () => request<ChatMessage[]>('/chat-messages')
 export const createChatMessage = (message: Omit<ChatMessage, 'id' | 'createdAt'>) =>

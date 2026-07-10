@@ -1,4 +1,4 @@
-import type { LaunchFormInput, LaunchPlanResult, WeekCalendarDay } from '../types'
+import type { LaunchContentDraft, LaunchFormInput, LaunchPlanResult, WeekCalendarDay } from '../types'
 import {
   AUDIENCE_LABEL,
   BUNDLE_FILLERS,
@@ -15,6 +15,7 @@ import {
   generateWechatGroupMessage,
   generateXiaohongshuPost,
 } from './contentTemplates'
+import { requestLaunchContent } from '../api/client'
 import { delay, pick, sample } from './randomUtils'
 import { formatPrice } from '../utils/format'
 import { uid } from '../utils/id'
@@ -93,17 +94,18 @@ function buildRiskReminders(input: LaunchFormInput): string[] {
   return reminders
 }
 
-export async function generateLaunchPlan(input: LaunchFormInput): Promise<LaunchPlanResult> {
+// Local template fallback for the creative-copy fields — same pool-based
+// generation this whole file used before real AI was wired in. Pricing math
+// (bundleSuggestion), risk rules (riskReminders) and the day-by-day rotation
+// (weekCalendar) are never sent to the AI; they're deterministic business
+// logic, not creative writing, so they're always computed locally below.
+async function mockGenerateLaunchContent(input: LaunchFormInput): Promise<LaunchContentDraft> {
   await delay(400)
-
   const priceLabel = formatPrice(input.price)
   const isGroupBuy = input.platforms.some((p) => GROUP_BUY_PLATFORMS.has(p))
   const sellingPoints = buildSellingPoints(input)
 
   return {
-    id: uid('launch'),
-    formSnapshot: input,
-    generatedAt: new Date().toISOString(),
     positioning: buildPositioning(input),
     sellingPoints,
     douyinScript: generateDouyinScript(input.name, priceLabel),
@@ -111,8 +113,25 @@ export async function generateLaunchPlan(input: LaunchFormInput): Promise<Launch
     momentsCopy: generateMomentsCopy(input.name),
     wechatGroupMessage: generateWechatGroupMessage(input.name, priceLabel, Boolean(input.limitedTime)),
     groupBuyTitles: isGroupBuy ? generateGroupBuyTitles(input.name, priceLabel, input.partySize) : [],
-    bundleSuggestion: buildBundleSuggestion(input),
     staffScript: buildStaffScript(input),
+  }
+}
+
+export async function generateLaunchPlan(input: LaunchFormInput): Promise<LaunchPlanResult> {
+  let content: LaunchContentDraft
+  try {
+    content = await requestLaunchContent(input)
+  } catch (err) {
+    console.error('Real launch content generation failed, falling back to local mock', err)
+    content = await mockGenerateLaunchContent(input)
+  }
+
+  return {
+    id: uid('launch'),
+    formSnapshot: input,
+    generatedAt: new Date().toISOString(),
+    ...content,
+    bundleSuggestion: buildBundleSuggestion(input),
     weekCalendar: buildWeekCalendar(input),
     riskReminders: buildRiskReminders(input),
   }

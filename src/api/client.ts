@@ -4,6 +4,8 @@ import type {
   ChatMessage,
   ContentPlan,
   ImageProvider,
+  LaunchContentDraft,
+  LaunchFormInput,
   LaunchPlanResult,
   PackagePlan,
   Review,
@@ -95,3 +97,8 @@ export const requestStyledImage = (
     method: 'POST',
     body: JSON.stringify({ type: 'generate-image', subject, style, provider }),
   })
+
+// src/ai/generateLaunchPlan.ts wraps this with a try/catch that falls back to
+// local template copy on failure (same pattern as the two calls above).
+export const requestLaunchContent = (input: LaunchFormInput) =>
+  request<LaunchContentDraft>('/launch-plan', { method: 'POST', body: JSON.stringify(input) })

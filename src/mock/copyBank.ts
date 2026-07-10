@@ -1,4 +1,4 @@
-import type { DishType, LaunchGoal, Platform, TargetAudience } from '../types'
+import type { DishType, LaunchGoal, Platform, TargetAudience } from '../types/index.js'
 
 export const PLATFORM_LABEL: Record<Platform, string> = {
   douyin: '抖音',

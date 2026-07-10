@@ -19,12 +19,12 @@ export function ContentResultCard({
             <Badge tone="primary">配图</Badge>
             <div className="mt-1.5 overflow-hidden rounded-2xl bg-bg">
               <img src={plan.coverImage.url} alt={plan.promotionObject} className="w-full" />
-              <div className="flex items-center justify-between gap-2 p-3">
-                <p className="min-w-0 flex-1 truncate text-xs text-ink-faint">{plan.coverImage.prompt}</p>
+              <div className="flex flex-col gap-2 p-3">
+                <p className="whitespace-pre-wrap text-xs text-ink-faint">{plan.coverImage.prompt}</p>
                 <a
                   href={plan.coverImage.url}
                   download={`${plan.promotionObject || 'content'}-配图`}
-                  className="shrink-0 rounded-pill bg-accent/15 px-3 py-1.5 text-xs font-medium text-accent-dark"
+                  className="self-start rounded-pill bg-accent/15 px-3 py-1.5 text-xs font-medium text-accent-dark"
                 >
                   保存图片
                 </a>

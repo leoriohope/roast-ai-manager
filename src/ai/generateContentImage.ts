@@ -52,7 +52,7 @@ async function mockGenerateContentImage(
 
   return {
     id: uid('img'),
-    dataUrl: `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`,
+    url: `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`,
     prompt,
   }
 }
@@ -63,8 +63,8 @@ export async function generateContentImage(
   provider?: ImageProvider,
 ): Promise<ContentImage> {
   try {
-    const { dataUrl, prompt } = await requestStyledImage(subject, style ?? null, provider ?? 'gemini')
-    return { id: uid('img'), dataUrl, prompt }
+    const { url, prompt } = await requestStyledImage(subject, style ?? null, provider ?? 'gemini')
+    return { id: uid('img'), url, prompt }
   } catch (err) {
     console.error('Real image generation failed, falling back to local mock', err)
     return mockGenerateContentImage(subject, style)

@@ -1,4 +1,5 @@
 import type { BrandStyleProfile, ImageProvider } from '../src/types/index.js'
+import { uploadGeneratedImage } from './_lib/blob.js'
 import { extractStyleFromImages, generateStyledImage } from './_lib/gemini.js'
 import { generateStyledImageOpenAI } from './_lib/openai.js'
 import { checkRateLimit, getClientIp } from './_lib/rateLimit.js'
@@ -46,11 +47,12 @@ export default withHandler(async (req, res) => {
     }
 
     const provider = body.provider ?? 'gemini'
-    const result =
+    const { dataUrl, prompt } =
       provider === 'openai'
         ? await generateStyledImageOpenAI(body.subject, body.style ?? null)
         : await generateStyledImage(body.subject, body.style ?? null)
-    res.status(200).json(result)
+    const url = await uploadGeneratedImage(dataUrl)
+    res.status(200).json({ url, prompt })
     return
   }
 

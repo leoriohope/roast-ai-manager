@@ -13,7 +13,7 @@ export interface ContentPlanInput {
 
 export interface ContentImage {
   id: string
-  dataUrl: string
+  url: string
   prompt: string
 }
 

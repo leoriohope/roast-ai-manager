@@ -41,6 +41,17 @@ export interface WeekCalendarDay {
   channel: Platform | 'store'
 }
 
+export interface LaunchContentDraft {
+  positioning: string
+  sellingPoints: string[]
+  douyinScript: string
+  xiaohongshuPost: { title: string; body: string; tags: string[] }
+  momentsCopy: string
+  wechatGroupMessage: string
+  groupBuyTitles: string[]
+  staffScript: string[]
+}
+
 export interface LaunchPlanResult {
   id: string
   formSnapshot: LaunchFormInput

@@ -1,4 +1,6 @@
 import type {
+  BrandStyleProfile,
+  BrandStyleProfileDraft,
   ChatMessage,
   ContentPlan,
   LaunchPlanResult,
@@ -48,3 +50,21 @@ export const createContentPlan = (storeId: string, plan: ContentPlan) =>
 export const getChatMessages = () => request<ChatMessage[]>('/chat-messages')
 export const createChatMessage = (message: Omit<ChatMessage, 'id' | 'createdAt'>) =>
   request<ChatMessage>('/chat-messages', { method: 'POST', body: JSON.stringify(message) })
+
+export const getBrandStyleProfile = () => request<BrandStyleProfile | null>('/brand-style-profiles')
+export const saveBrandStyleProfile = (profile: BrandStyleProfileDraft) =>
+  request<BrandStyleProfile>('/brand-style-profiles', { method: 'POST', body: JSON.stringify(profile) })
+
+// These two hit real (server-held-key) Gemini calls — src/ai/extractBrandStyle.ts and
+// generateContentImage.ts wrap them with a try/catch that falls back to a local mock
+// on failure (e.g. while GEMINI_API_KEY is still a placeholder).
+export const requestBrandStyleDraft = (referenceImages: string[]) =>
+  request<BrandStyleProfileDraft>('/brand-style-extract', {
+    method: 'POST',
+    body: JSON.stringify({ referenceImages }),
+  })
+export const requestStyledImage = (subject: string, style: BrandStyleProfile | null) =>
+  request<{ dataUrl: string; prompt: string }>('/generate-content-image', {
+    method: 'POST',
+    body: JSON.stringify({ subject, style }),
+  })

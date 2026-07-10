@@ -1,4 +1,5 @@
 import type {
+  BrandStyleProfile,
   ChatMessage,
   ContentPlan,
   LaunchFormInput,
@@ -36,6 +37,8 @@ export interface AppState {
 
   chatHistory: ChatMessage[]
 
+  brandStyleProfile: BrandStyleProfile | null
+
   toasts: Toast[]
 }
 
@@ -51,6 +54,7 @@ export type AppAction =
   | { type: 'ADD_TASK'; task: Task }
   | { type: 'TOGGLE_TASK_STATUS'; taskId: string }
   | { type: 'ADD_CHAT_MESSAGE'; message: ChatMessage }
+  | { type: 'SET_BRAND_STYLE_PROFILE'; profile: BrandStyleProfile }
   | { type: 'PUSH_TOAST'; toast: Toast }
   | { type: 'DISMISS_TOAST'; id: string }
   | { type: 'HYDRATE'; state: Partial<AppState> }
@@ -97,6 +101,9 @@ export function appReducer(state: AppState, action: AppAction): AppState {
 
     case 'ADD_CHAT_MESSAGE':
       return { ...state, chatHistory: [...state.chatHistory, action.message] }
+
+    case 'SET_BRAND_STYLE_PROFILE':
+      return { ...state, brandStyleProfile: action.profile }
 
     case 'PUSH_TOAST':
       return { ...state, toasts: [...state.toasts, action.toast] }

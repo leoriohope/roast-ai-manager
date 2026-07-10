@@ -1,9 +1,11 @@
 import type { Platform } from './launch'
+import type { BrandStyleProfile } from './brandStyle'
 
 export interface ContentPlanInput {
   storeId: string
   promotionObject: string
   platforms: Platform[]
+  brandStyle?: BrandStyleProfile | null
 }
 
 export interface ContentImage {

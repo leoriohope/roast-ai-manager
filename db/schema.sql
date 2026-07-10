@@ -89,3 +89,14 @@ CREATE TABLE IF NOT EXISTS chat_messages (
   content text NOT NULL,
   created_at timestamptz NOT NULL DEFAULT now()
 );
+
+-- Brand-wide (not per-store) visual style profile. Append-only: every
+-- extract+save cycle inserts a new row; "current style" = latest row by
+-- generated_at. No store_id — style is shared across all stores. Raw
+-- reference images are never persisted, only the extracted profile.
+CREATE TABLE IF NOT EXISTS brand_style_profiles (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  generated_at timestamptz NOT NULL,
+  payload jsonb NOT NULL
+);
+CREATE INDEX IF NOT EXISTS brand_style_profiles_generated_at_idx ON brand_style_profiles (generated_at DESC);

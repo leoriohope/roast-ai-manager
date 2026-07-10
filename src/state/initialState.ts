@@ -38,5 +38,6 @@ export const initialState: AppState = {
   reviewAnalysisByStore: {},
   tasks: [],
   chatHistory: [],
+  brandStyleProfile: null,
   toasts: [],
 }

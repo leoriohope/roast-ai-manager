@@ -3,6 +3,7 @@ import type { Platform } from '../../types'
 import { useApp, useToast } from '../../state/AppContext'
 import { generateContentPlan } from '../../ai'
 import { createContentPlan, createTask } from '../../api/client'
+import { BrandStyleSection } from './BrandStyleSection'
 import { ContentForm } from './ContentForm'
 import { ContentResultCard } from './ContentResultCard'
 import { EmptyState } from '../../components/ui/EmptyState'
@@ -17,7 +18,12 @@ export function ContentPage() {
   const handleSubmit = async () => {
     setSubmitting(true)
     try {
-      const generated = await generateContentPlan({ storeId: state.currentStoreId, promotionObject, platforms })
+      const generated = await generateContentPlan({
+        storeId: state.currentStoreId,
+        promotionObject,
+        platforms,
+        brandStyle: state.brandStyleProfile,
+      })
       const saved = await createContentPlan(state.currentStoreId, generated)
       dispatch({ type: 'ADD_CONTENT_PLAN', plan: saved })
     } catch {
@@ -45,6 +51,7 @@ export function ContentPage() {
 
   return (
     <div className="flex flex-col gap-4">
+      <BrandStyleSection />
       <ContentForm
         promotionObject={promotionObject}
         onPromotionObjectChange={setPromotionObject}

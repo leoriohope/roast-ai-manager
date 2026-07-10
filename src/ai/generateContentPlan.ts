@@ -9,7 +9,7 @@ import { generateContentImage } from './generateContentImage'
 import { uid } from '../utils/id'
 
 export async function generateContentPlan(input: ContentPlanInput): Promise<ContentPlan> {
-  const coverImage = await generateContentImage(input.promotionObject, input.brandStyle)
+  const coverImage = await generateContentImage(input.promotionObject, input.brandStyle, input.imageProvider)
 
   const platforms = new Set(input.platforms)
   const plan: ContentPlan = {

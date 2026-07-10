@@ -1,4 +1,5 @@
 import { useRef } from 'react'
+import { resizeImageFile } from '../../utils/image'
 
 export function MockUploadField({
   label,
@@ -13,9 +14,7 @@ export function MockUploadField({
 
   const handleFile = (file: File | undefined) => {
     if (!file) return
-    const reader = new FileReader()
-    reader.onload = () => onChange(reader.result as string)
-    reader.readAsDataURL(file)
+    resizeImageFile(file).then(onChange)
   }
 
   return (

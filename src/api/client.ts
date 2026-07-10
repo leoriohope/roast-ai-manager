@@ -13,16 +13,37 @@ import type {
   TaskStatus,
   TodaySummary,
 } from '../types'
+import { getStoredAccessCode } from './accessCode'
+
+export class AccessCodeError extends Error {
+  constructor() {
+    super('Invalid or missing access code')
+    this.name = 'AccessCodeError'
+  }
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
+  const code = getStoredAccessCode()
   const res = await fetch(`/api${path}`, {
     ...init,
-    headers: { 'Content-Type': 'application/json', ...init?.headers },
+    headers: {
+      'Content-Type': 'application/json',
+      ...(code ? { 'x-access-code': code } : {}),
+      ...init?.headers,
+    },
   })
+  if (res.status === 401) {
+    throw new AccessCodeError()
+  }
   if (!res.ok) {
     throw new Error(`${init?.method ?? 'GET'} ${path} failed: ${res.status}`)
   }
   return res.json() as Promise<T>
+}
+
+export async function verifyAccessCode(code: string): Promise<boolean> {
+  const res = await fetch('/api/stores', { headers: { 'x-access-code': code } })
+  return res.ok
 }
 
 export const getStores = () => request<Store[]>('/stores')

@@ -1,4 +1,5 @@
 import { AppProvider, useApp } from './state/AppContext'
+import { AccessGate } from './components/AccessGate'
 import { Shell } from './components/layout/Shell'
 import { TodayPage } from './pages/today/TodayPage'
 import { LaunchAssistantPage } from './pages/launch/LaunchAssistantPage'
@@ -30,10 +31,12 @@ function CurrentPage() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <Shell>
-        <CurrentPage />
-      </Shell>
-    </AppProvider>
+    <AccessGate>
+      <AppProvider>
+        <Shell>
+          <CurrentPage />
+        </Shell>
+      </AppProvider>
+    </AccessGate>
   )
 }

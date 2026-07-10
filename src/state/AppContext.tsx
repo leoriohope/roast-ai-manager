@@ -12,6 +12,7 @@ import { appReducer, type AppAction, type AppState } from './appReducer'
 import { initialState } from './initialState'
 import { loadPersisted, savePersisted } from './persistence'
 import {
+  AccessCodeError,
   getBrandStyleProfile,
   getChatMessages,
   getContentPlans,
@@ -21,6 +22,7 @@ import {
   getStores,
   getTasks,
 } from '../api/client'
+import { clearStoredAccessCode } from '../api/accessCode'
 import { uid } from '../utils/id'
 
 interface AppContextValue {
@@ -71,6 +73,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setStatus('ready')
     } catch (err) {
       console.error('Failed to load app data', err)
+      if (err instanceof AccessCodeError) {
+        // Access code was rotated server-side or is otherwise stale — force
+        // back through the access gate rather than showing a generic error.
+        clearStoredAccessCode()
+        window.location.reload()
+        return
+      }
       setStatus('error')
     }
   }, [])

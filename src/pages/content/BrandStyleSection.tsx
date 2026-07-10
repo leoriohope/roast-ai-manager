@@ -89,6 +89,11 @@ export function BrandStyleSection() {
           {draft && (
             <div className="flex flex-col gap-3 rounded-2xl bg-bg p-3">
               <Input
+                label="视觉呈现形式（真实摄影 or 海报设计）"
+                value={draft.visualFormat}
+                onChange={(e) => setDraft({ ...draft, visualFormat: e.target.value })}
+              />
+              <Input
                 label="色调（逗号分隔的色值）"
                 value={draft.colorPalette.join(', ')}
                 onChange={(e) => setDraft({ ...draft, colorPalette: splitList(e.target.value) })}

@@ -2,6 +2,11 @@ import type { BrandStyleProfileDraft } from '../types'
 import { requestBrandStyleDraft } from '../api/client'
 import { delay, pick, sample } from './randomUtils'
 
+const VISUAL_FORMAT_OPTIONS = [
+  '真实美食摄影风格，无文字覆盖，聚焦食材光泽与细节',
+  '真实场景抓拍风格，自然光线，无文字与图形元素',
+  '偏写实的静物摆拍风格，浅景深，无标题文字',
+]
 const COLOR_PALETTES: string[][] = [
   ['#E14D2A', '#F4A340', '#2B1B12'],
   ['#C13A1B', '#F2C94C', '#3E2723'],
@@ -24,6 +29,7 @@ async function mockExtractBrandStyle(referenceImages: string[]): Promise<BrandSt
   await delay(1200)
   return {
     generatedAt: new Date().toISOString(),
+    visualFormat: pick(VISUAL_FORMAT_OPTIONS),
     colorPalette: pick(COLOR_PALETTES),
     lighting: pick(LIGHTING_OPTIONS),
     composition: pick(COMPOSITION_OPTIONS),

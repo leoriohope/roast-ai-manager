@@ -1,5 +1,6 @@
 import { GoogleGenAI, Modality, Type } from '@google/genai'
 import type { BrandStyleProfile, BrandStyleProfileDraft } from '../../src/types/index.js'
+import { buildImagePrompt } from './imagePrompt.js'
 
 function client(): GoogleGenAI {
   const apiKey = process.env.GEMINI_API_KEY
@@ -12,13 +13,14 @@ function client(): GoogleGenAI {
 const STYLE_SCHEMA = {
   type: Type.OBJECT,
   properties: {
+    visualFormat: { type: Type.STRING },
     colorPalette: { type: Type.ARRAY, items: { type: Type.STRING } },
     lighting: { type: Type.STRING },
     composition: { type: Type.STRING },
     platingStyle: { type: Type.STRING },
     moodKeywords: { type: Type.ARRAY, items: { type: Type.STRING } },
   },
-  required: ['colorPalette', 'lighting', 'composition', 'platingStyle', 'moodKeywords'],
+  required: ['visualFormat', 'colorPalette', 'lighting', 'composition', 'platingStyle', 'moodKeywords'],
 }
 
 export async function extractStyleFromImages(
@@ -33,7 +35,7 @@ export async function extractStyleFromImages(
         role: 'user',
         parts: [
           {
-            text: '分析这些餐厅/菜品照片的视觉风格，提炼出色调、打光、构图习惯、摆盘风格和氛围关键词，用于之后生成风格一致的营销配图。',
+            text: '分析这些餐厅/菜品照片的视觉呈现形式和风格。首先判断：这些图片是真实拍摄的美食摄影照片，还是包含文字/图形设计元素的海报类素材？用一句话描述这个视觉呈现形式（visualFormat）。然后提炼出色调、打光、构图习惯、摆盘风格和氛围关键词，用于之后生成风格一致的营销配图。',
           },
           ...images.map((img) => ({ inlineData: img })),
         ],
@@ -49,6 +51,7 @@ export async function extractStyleFromImages(
 
   return {
     generatedAt: new Date().toISOString(),
+    visualFormat: parsed.visualFormat ?? '',
     colorPalette: parsed.colorPalette ?? [],
     lighting: parsed.lighting ?? '',
     composition: parsed.composition ?? '',
@@ -63,10 +66,7 @@ export async function generateStyledImage(
   style: BrandStyleProfile | null,
 ): Promise<{ dataUrl: string; prompt: string }> {
   const ai = client()
-
-  const prompt = style
-    ? `一张"${subject}"的餐厅营销配图。风格要求：色调以${style.colorPalette.join('、')}为主；打光：${style.lighting}；构图：${style.composition}；摆盘风格：${style.platingStyle}；氛围关键词：${style.moodKeywords.join('、')}。`
-    : `一张"${subject}"的餐厅营销配图，暖色调，适合社交媒体推广使用。`
+  const prompt = buildImagePrompt(subject, style)
 
   const response = await ai.models.generateContent({
     model: 'gemini-3.1-flash-image',

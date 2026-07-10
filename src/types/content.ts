@@ -1,11 +1,14 @@
 import type { Platform } from './launch'
 import type { BrandStyleProfile } from './brandStyle'
 
+export type ImageProvider = 'gemini' | 'openai'
+
 export interface ContentPlanInput {
   storeId: string
   promotionObject: string
   platforms: Platform[]
   brandStyle?: BrandStyleProfile | null
+  imageProvider?: ImageProvider
 }
 
 export interface ContentImage {

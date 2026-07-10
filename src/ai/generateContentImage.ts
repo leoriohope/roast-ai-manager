@@ -1,4 +1,4 @@
-import type { BrandStyleProfile, ContentImage } from '../types'
+import type { BrandStyleProfile, ContentImage, ImageProvider } from '../types'
 import { requestStyledImage } from '../api/client'
 import { delay, pick } from './randomUtils'
 import { uid } from '../utils/id'
@@ -60,9 +60,10 @@ async function mockGenerateContentImage(
 export async function generateContentImage(
   subject: string,
   style?: BrandStyleProfile | null,
+  provider?: ImageProvider,
 ): Promise<ContentImage> {
   try {
-    const { dataUrl, prompt } = await requestStyledImage(subject, style ?? null)
+    const { dataUrl, prompt } = await requestStyledImage(subject, style ?? null, provider ?? 'gemini')
     return { id: uid('img'), dataUrl, prompt }
   } catch (err) {
     console.error('Real image generation failed, falling back to local mock', err)

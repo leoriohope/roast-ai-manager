@@ -3,6 +3,7 @@ import type {
   BrandStyleProfileDraft,
   ChatMessage,
   ContentPlan,
+  ImageProvider,
   LaunchPlanResult,
   PackagePlan,
   Review,
@@ -55,16 +56,21 @@ export const getBrandStyleProfile = () => request<BrandStyleProfile | null>('/br
 export const saveBrandStyleProfile = (profile: BrandStyleProfileDraft) =>
   request<BrandStyleProfile>('/brand-style-profiles', { method: 'POST', body: JSON.stringify(profile) })
 
-// Both hit the same merged /api/gemini endpoint (real, server-held-key Gemini calls) —
-// src/ai/extractBrandStyle.ts and generateContentImage.ts wrap them with a try/catch
-// that falls back to a local mock on failure (e.g. while GEMINI_API_KEY is a placeholder).
+// Both hit the same merged /api/image-actions endpoint (real, server-held-key
+// calls) — src/ai/extractBrandStyle.ts and generateContentImage.ts wrap them
+// with a try/catch that falls back to a local mock on failure (e.g. while the
+// relevant provider's API key is still a placeholder).
 export const requestBrandStyleDraft = (referenceImages: string[]) =>
-  request<BrandStyleProfileDraft>('/gemini', {
+  request<BrandStyleProfileDraft>('/image-actions', {
     method: 'POST',
     body: JSON.stringify({ type: 'extract-style', referenceImages }),
   })
-export const requestStyledImage = (subject: string, style: BrandStyleProfile | null) =>
-  request<{ dataUrl: string; prompt: string }>('/gemini', {
+export const requestStyledImage = (
+  subject: string,
+  style: BrandStyleProfile | null,
+  provider: ImageProvider = 'gemini',
+) =>
+  request<{ dataUrl: string; prompt: string }>('/image-actions', {
     method: 'POST',
-    body: JSON.stringify({ type: 'generate-image', subject, style }),
+    body: JSON.stringify({ type: 'generate-image', subject, style, provider }),
   })

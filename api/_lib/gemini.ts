@@ -27,7 +27,7 @@ export async function extractStyleFromImages(
   const ai = client()
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: [
       {
         role: 'user',
@@ -69,7 +69,7 @@ export async function generateStyledImage(
     : `一张"${subject}"的餐厅营销配图，暖色调，适合社交媒体推广使用。`
 
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash-image',
+    model: 'gemini-3.1-flash-image',
     contents: prompt,
     config: {
       responseModalities: [Modality.IMAGE],

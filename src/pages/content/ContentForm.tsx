@@ -1,7 +1,7 @@
-import type { Platform } from '../../types'
+import type { ImageProvider, Platform } from '../../types'
 import { Card } from '../../components/ui/Card'
 import { Input } from '../../components/ui/Input'
-import { ChipGroup } from '../../components/ui/Chip'
+import { ChipGroup, Chip } from '../../components/ui/Chip'
 import { Button } from '../../components/ui/Button'
 import { PLATFORM_LABEL } from '../../mock/copyBank'
 
@@ -12,6 +12,11 @@ const CONTENT_PLATFORMS: { value: Platform; label: string }[] = [
   { value: 'wechat_group', label: PLATFORM_LABEL.wechat_group },
 ]
 
+const IMAGE_PROVIDER_OPTIONS: { value: ImageProvider; label: string }[] = [
+  { value: 'gemini', label: 'Google' },
+  { value: 'openai', label: 'GPT Image 2' },
+]
+
 const OBJECT_PRESETS = ['新品', '招牌菜', '双人套餐', '门店氛围', '下班小聚', '生日聚会']
 
 export function ContentForm({
@@ -19,6 +24,8 @@ export function ContentForm({
   onPromotionObjectChange,
   platforms,
   onPlatformsChange,
+  imageProvider,
+  onImageProviderChange,
   onSubmit,
   submitting,
 }: {
@@ -26,6 +33,8 @@ export function ContentForm({
   onPromotionObjectChange: (v: string) => void
   platforms: Platform[]
   onPlatformsChange: (v: Platform[]) => void
+  imageProvider: ImageProvider
+  onImageProviderChange: (v: ImageProvider) => void
   onSubmit: () => void
   submitting: boolean
 }) {
@@ -58,6 +67,19 @@ export function ContentForm({
         value={platforms}
         onChange={onPlatformsChange}
       />
+      <div>
+        <span className="mb-1.5 block text-sm text-ink">配图生成模型</span>
+        <div className="flex flex-wrap gap-2">
+          {IMAGE_PROVIDER_OPTIONS.map((opt) => (
+            <Chip
+              key={opt.value}
+              label={opt.label}
+              selected={imageProvider === opt.value}
+              onClick={() => onImageProviderChange(opt.value)}
+            />
+          ))}
+        </div>
+      </div>
       <Button disabled={!valid || submitting} onClick={onSubmit}>
         {submitting ? '生成中…' : '生成推广内容'}
       </Button>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import type { Platform } from '../../types'
+import type { ImageProvider, Platform } from '../../types'
 import { useApp, useToast } from '../../state/AppContext'
 import { generateContentPlan } from '../../ai'
 import { createContentPlan, createTask } from '../../api/client'
@@ -13,6 +13,7 @@ export function ContentPage() {
   const toast = useToast()
   const [promotionObject, setPromotionObject] = useState('')
   const [platforms, setPlatforms] = useState<Platform[]>([])
+  const [imageProvider, setImageProvider] = useState<ImageProvider>('gemini')
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async () => {
@@ -23,6 +24,7 @@ export function ContentPage() {
         promotionObject,
         platforms,
         brandStyle: state.brandStyleProfile,
+        imageProvider,
       })
       const saved = await createContentPlan(state.currentStoreId, generated)
       dispatch({ type: 'ADD_CONTENT_PLAN', plan: saved })
@@ -57,6 +59,8 @@ export function ContentPage() {
         onPromotionObjectChange={setPromotionObject}
         platforms={platforms}
         onPlatformsChange={setPlatforms}
+        imageProvider={imageProvider}
+        onImageProviderChange={setImageProvider}
         onSubmit={handleSubmit}
         submitting={submitting}
       />

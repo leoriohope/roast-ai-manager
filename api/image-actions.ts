@@ -1,9 +1,11 @@
-import type { BrandStyleProfile } from '../src/types/index.js'
+import type { BrandStyleProfile, ImageProvider } from '../src/types/index.js'
 import { extractStyleFromImages, generateStyledImage } from './_lib/gemini.js'
+import { generateStyledImageOpenAI } from './_lib/openai.js'
 import { withHandler } from './_lib/withHandler.js'
 
-// Combines the two Gemini-backed actions (style extraction + image generation)
-// into one function to stay under Vercel Hobby's 12-serverless-function cap.
+// Combines style extraction (always Gemini) and image generation (provider-
+// selectable: Gemini or OpenAI) into one function to stay under Vercel
+// Hobby's 12-serverless-function cap.
 function parseDataUrl(dataUrl: string): { mimeType: string; data: string } {
   const match = /^data:(.+);base64,(.+)$/.exec(dataUrl)
   if (!match) {
@@ -20,7 +22,12 @@ export default withHandler(async (req, res) => {
 
   const body = req.body as
     | { type: 'extract-style'; referenceImages: string[] }
-    | { type: 'generate-image'; subject: string; style?: BrandStyleProfile | null }
+    | {
+        type: 'generate-image'
+        subject: string
+        style?: BrandStyleProfile | null
+        provider?: ImageProvider
+      }
 
   if (body.type === 'extract-style') {
     const images = (body.referenceImages ?? []).map(parseDataUrl)
@@ -30,7 +37,11 @@ export default withHandler(async (req, res) => {
   }
 
   if (body.type === 'generate-image') {
-    const result = await generateStyledImage(body.subject, body.style ?? null)
+    const provider = body.provider ?? 'gemini'
+    const result =
+      provider === 'openai'
+        ? await generateStyledImageOpenAI(body.subject, body.style ?? null)
+        : await generateStyledImage(body.subject, body.style ?? null)
     res.status(200).json(result)
     return
   }

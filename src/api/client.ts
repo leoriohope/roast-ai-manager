@@ -99,6 +99,8 @@ export const requestStyledImage = (
   })
 
 // src/ai/generateLaunchPlan.ts wraps this with a try/catch that falls back to
-// local template copy on failure (same pattern as the two calls above).
+// local template copy on failure (same pattern as the two calls above). PATCH
+// on /launch-results (rather than a separate endpoint file) to stay under
+// Vercel Hobby's 12-serverless-function cap.
 export const requestLaunchContent = (input: LaunchFormInput) =>
-  request<LaunchContentDraft>('/launch-plan', { method: 'POST', body: JSON.stringify(input) })
+  request<LaunchContentDraft>('/launch-results', { method: 'PATCH', body: JSON.stringify(input) })

@@ -33,6 +33,7 @@ export function PackagePage() {
         storeId: state.currentStoreId,
         promotionObject: plan.name,
         platforms: plan.platform,
+        brandStyle: state.brandStyleProfile,
       })
       const saved = await createContentPlan(state.currentStoreId, generated)
       dispatch({ type: 'ADD_CONTENT_PLAN', plan: saved })

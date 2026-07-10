@@ -12,6 +12,7 @@ import { appReducer, type AppAction, type AppState } from './appReducer'
 import { initialState } from './initialState'
 import { loadPersisted, savePersisted } from './persistence'
 import {
+  getBrandStyleProfile,
   getChatMessages,
   getContentPlans,
   getLaunchResults,
@@ -52,7 +53,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const bootstrap = useCallback(async () => {
     setStatus('loading')
     try {
-      const [stores, reviews, tasks, launchResults, packagePlans, contentPlans, chatHistory] =
+      const [stores, reviews, tasks, launchResults, packagePlans, contentPlans, chatHistory, brandStyleProfile] =
         await Promise.all([
           getStores(),
           getReviews(),
@@ -61,10 +62,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
           getPackagePlans(),
           getContentPlans(),
           getChatMessages(),
+          getBrandStyleProfile(),
         ])
       dispatch({
         type: 'HYDRATE',
-        state: { stores, reviews, tasks, launchResults, packagePlans, contentPlans, chatHistory },
+        state: { stores, reviews, tasks, launchResults, packagePlans, contentPlans, chatHistory, brandStyleProfile },
       })
       setStatus('ready')
     } catch (err) {

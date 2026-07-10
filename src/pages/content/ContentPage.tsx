@@ -13,7 +13,7 @@ export function ContentPage() {
   const toast = useToast()
   const [promotionObject, setPromotionObject] = useState('')
   const [platforms, setPlatforms] = useState<Platform[]>([])
-  const [imageProvider, setImageProvider] = useState<ImageProvider>('gemini')
+  const [imageProvider, setImageProvider] = useState<ImageProvider>('openai')
   const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = async () => {

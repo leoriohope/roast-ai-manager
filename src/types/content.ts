@@ -17,6 +17,13 @@ export interface ContentImage {
   prompt: string
 }
 
+export interface ContentCopyDraft {
+  douyinScript?: string
+  xiaohongshuPost?: { title: string; body: string; tags: string[] }
+  momentsCopy?: string
+  wechatGroupMessage?: string
+}
+
 export interface ContentPlan {
   id: string
   promotionObject: string

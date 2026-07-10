@@ -100,3 +100,14 @@ CREATE TABLE IF NOT EXISTS brand_style_profiles (
   payload jsonb NOT NULL
 );
 CREATE INDEX IF NOT EXISTS brand_style_profiles_generated_at_idx ON brand_style_profiles (generated_at DESC);
+
+-- Caps real (paid) AI image-generation calls per IP. One row per call to
+-- api/image-actions.ts's generate-image action; count recent rows for an IP
+-- before allowing another call through.
+CREATE TABLE IF NOT EXISTS api_rate_limit_events (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  ip text NOT NULL,
+  endpoint text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS api_rate_limit_events_ip_idx ON api_rate_limit_events (ip, created_at);

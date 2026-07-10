@@ -1,6 +1,7 @@
 import type { BrandStyleProfile, ImageProvider } from '../src/types/index.js'
 import { extractStyleFromImages, generateStyledImage } from './_lib/gemini.js'
 import { generateStyledImageOpenAI } from './_lib/openai.js'
+import { checkRateLimit, getClientIp } from './_lib/rateLimit.js'
 import { withHandler } from './_lib/withHandler.js'
 
 // Combines style extraction (always Gemini) and image generation (provider-
@@ -37,6 +38,13 @@ export default withHandler(async (req, res) => {
   }
 
   if (body.type === 'generate-image') {
+    const ip = getClientIp(req)
+    const allowed = await checkRateLimit(ip, 'generate-image')
+    if (!allowed) {
+      res.status(429).json({ error: 'Rate limit exceeded, please try again later' })
+      return
+    }
+
     const provider = body.provider ?? 'gemini'
     const result =
       provider === 'openai'

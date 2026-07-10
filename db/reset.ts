@@ -1,6 +1,7 @@
 import { sql } from '../api/_lib/db.js'
 
 const TABLES = [
+  'api_rate_limit_events',
   'brand_style_profiles',
   'chat_messages',
   'content_plans',

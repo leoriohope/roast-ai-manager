@@ -91,7 +91,7 @@ export const requestStyledImage = (
   style: BrandStyleProfile | null,
   provider: ImageProvider = 'gemini',
 ) =>
-  request<{ dataUrl: string; prompt: string }>('/image-actions', {
+  request<{ url: string; prompt: string }>('/image-actions', {
     method: 'POST',
     body: JSON.stringify({ type: 'generate-image', subject, style, provider }),
   })

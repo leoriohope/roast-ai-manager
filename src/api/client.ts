@@ -55,16 +55,16 @@ export const getBrandStyleProfile = () => request<BrandStyleProfile | null>('/br
 export const saveBrandStyleProfile = (profile: BrandStyleProfileDraft) =>
   request<BrandStyleProfile>('/brand-style-profiles', { method: 'POST', body: JSON.stringify(profile) })
 
-// These two hit real (server-held-key) Gemini calls — src/ai/extractBrandStyle.ts and
-// generateContentImage.ts wrap them with a try/catch that falls back to a local mock
-// on failure (e.g. while GEMINI_API_KEY is still a placeholder).
+// Both hit the same merged /api/gemini endpoint (real, server-held-key Gemini calls) —
+// src/ai/extractBrandStyle.ts and generateContentImage.ts wrap them with a try/catch
+// that falls back to a local mock on failure (e.g. while GEMINI_API_KEY is a placeholder).
 export const requestBrandStyleDraft = (referenceImages: string[]) =>
-  request<BrandStyleProfileDraft>('/brand-style-extract', {
+  request<BrandStyleProfileDraft>('/gemini', {
     method: 'POST',
-    body: JSON.stringify({ referenceImages }),
+    body: JSON.stringify({ type: 'extract-style', referenceImages }),
   })
 export const requestStyledImage = (subject: string, style: BrandStyleProfile | null) =>
-  request<{ dataUrl: string; prompt: string }>('/generate-content-image', {
+  request<{ dataUrl: string; prompt: string }>('/gemini', {
     method: 'POST',
-    body: JSON.stringify({ subject, style }),
+    body: JSON.stringify({ type: 'generate-image', subject, style }),
   })

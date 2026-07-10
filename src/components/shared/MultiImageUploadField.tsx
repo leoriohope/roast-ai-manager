@@ -1,13 +1,5 @@
 import { useRef } from 'react'
-
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-    reader.onload = () => resolve(reader.result as string)
-    reader.onerror = () => reject(reader.error)
-    reader.readAsDataURL(file)
-  })
-}
+import { resizeImageFile } from '../../utils/image'
 
 export function MultiImageUploadField({
   label,
@@ -29,7 +21,7 @@ export function MultiImageUploadField({
     // Read all files in parallel, then commit with a single onChange — reading
     // them one-by-one inside each FileReader.onload would each close over the
     // same stale `values`, silently dropping all but the last file.
-    const dataUrls = await Promise.all(list.map(readAsDataUrl))
+    const dataUrls = await Promise.all(list.map((file) => resizeImageFile(file)))
     onChange([...values, ...dataUrls])
   }
 

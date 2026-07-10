@@ -1,6 +1,7 @@
 import OpenAI from 'openai'
 import type { LaunchFormInput } from '../../src/types/index.js'
 import { AUDIENCE_LABEL, DISH_TYPE_LABEL, GOAL_LABEL, PLATFORM_LABEL } from '../../src/mock/copyBank.js'
+import { BRAND_DESCRIPTION, BRAND_NAME } from './brandContext.js'
 
 function client(): OpenAI {
   const apiKey = process.env.OPENAI_API_KEY
@@ -55,9 +56,10 @@ const LAUNCH_CONTENT_SCHEMA = {
   ],
 }
 
-// Non-store-level base prompt: fixed role/voice instructions that apply to
-// every launch plan regardless of dish or store.
-const BASE_PROMPT = `你是连锁烤肉品牌的社交媒体和营销文案专家，帮门店店长为新品/新套餐写上市推广内容。
+// Non-store-level base prompt: fixed role/voice instructions plus brand
+// identity that apply to every launch plan regardless of dish or store.
+const BASE_PROMPT = `你是"${BRAND_NAME}"品牌的社交媒体和营销文案专家，帮门店店长为新品/新套餐写上市推广内容。
+${BRAND_DESCRIPTION}
 风格要求：口语化、接地气，有烟火气，避免浮夸的企业公关腔调，不要用"引领""赋能"这类词。
 所有输出使用中文。`
 

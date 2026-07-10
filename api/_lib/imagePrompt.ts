@@ -1,11 +1,19 @@
 import type { BrandStyleProfile } from '../../src/types/index.js'
+import { BRAND_NAME } from './brandContext.js'
 
 const NO_TEXT_CONSTRAINT = '不出现任何文字、水印或品牌logo。'
 
 // Non-store-level base description — without this, a generic subject like
 // "新品" gives the model zero indication this is a Chinese BBQ restaurant,
-// and it can generate completely unrelated food.
-const CUISINE_CONTEXT = '这是一家中式烤肉/烧烤餐厅，画面里的食物应该是烤肉、烤串或搭配的烤肉店餐食。'
+// and it can generate completely unrelated food. Concrete visual signatures
+// (charcoal fire, specific cuts, tableside grilling) come first since GPT
+// Image 2 weights earlier words more heavily; abstract brand-positioning
+// language is left out entirely because it doesn't change what gets drawn.
+const CUISINE_CONTEXT =
+  `这是"${BRAND_NAME}"品牌门店，主打东北风味炭火烤肉——木炭明火烤制，不是电烤炉。` +
+  `核心食材是鲜切牛肉，常见部位有丹东小黄牛、牛肋条、横膈膜、牛五花、雪花牛肉。` +
+  `画面可以是店员在餐桌旁的炭炉上专业代烤、翻面、分切牛肉，也可以是烤好的牛肉、` +
+  `或搭配的东北特色菜（如冷面、拌饭、凉菜、冻梨）。`
 
 // Shared by both Gemini and OpenAI image generation — visualFormat is placed
 // right after the core subject (highest-weighted position) since it's the

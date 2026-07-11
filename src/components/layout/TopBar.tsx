@@ -16,7 +16,7 @@ export function TopBar({ currentTab }: { currentTab: string }) {
       <div className="flex items-center gap-2.5">
         <img src="/logo.png" alt="" className="h-9 w-9 rounded-full" />
         <div>
-          <p className="text-xs text-ink-faint">烤肉 AI 店长</p>
+          <p className="text-xs text-ink-faint">南北征赞·野核桃东北烤肉</p>
           <h1 className="text-lg font-semibold text-ink">{TAB_TITLES[currentTab] ?? ''}</h1>
         </div>
       </div>

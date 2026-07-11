@@ -60,7 +60,7 @@ export function AccessGate({ children }: { children: ReactNode }) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-bg px-6">
         <form onSubmit={handleSubmit} className="w-full max-w-xs rounded-card bg-surface p-6 shadow-card">
-          <p className="mb-1 text-center text-lg font-semibold text-ink">烤肉 AI 店长</p>
+          <p className="mb-1 text-center text-lg font-semibold text-ink">南北征赞·野核桃东北烤肉</p>
           <p className="mb-4 text-center text-sm text-ink-faint">请输入访问码</p>
           <Input
             label="访问码"

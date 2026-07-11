@@ -5,23 +5,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#FBF3E7',
+        bg: '#F0ECD9',
         surface: '#FFFFFF',
         primary: {
-          DEFAULT: '#E14D2A',
-          dark: '#C13A1B',
-          light: '#F2775A',
+          DEFAULT: '#3C2018',
+          dark: '#26140E',
+          light: '#6B4636',
         },
         accent: {
-          DEFAULT: '#F4A340',
-          dark: '#DB8A28',
+          DEFAULT: '#869247',
+          dark: '#5C6B2E',
         },
         ink: {
-          DEFAULT: '#2B211C',
-          soft: '#6B5B50',
-          faint: '#A99A8E',
+          DEFAULT: '#2A1810',
+          soft: '#6B5346',
+          faint: '#A8998A',
         },
-        line: '#EDE0D0',
+        line: '#DDD6BE',
         positive: '#3E8E5A',
         negative: '#D64545',
       },
@@ -30,7 +30,7 @@ export default {
         pill: '999px',
       },
       boxShadow: {
-        card: '0 2px 10px rgba(43, 33, 28, 0.06)',
+        card: '0 2px 10px rgba(42, 24, 16, 0.08)',
       },
       fontFamily: {
         sans: [

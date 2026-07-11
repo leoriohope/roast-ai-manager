@@ -8,9 +8,9 @@ const VISUAL_FORMAT_OPTIONS = [
   '偏写实的静物摆拍风格，浅景深，无标题文字',
 ]
 const COLOR_PALETTES: string[][] = [
-  ['#E14D2A', '#F4A340', '#2B1B12'],
-  ['#C13A1B', '#F2C94C', '#3E2723'],
-  ['#DB8A28', '#8B3A1A', '#F2E4C9'],
+  ['#3C2018', '#869247', '#F0ECD9'],
+  ['#26140E', '#5C6B2E', '#E5DFCC'],
+  ['#6B4636', '#869247', '#2A1810'],
 ]
 const LIGHTING_OPTIONS = [
   '暖色调自然光，突出食材油脂光泽',

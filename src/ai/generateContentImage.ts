@@ -5,10 +5,10 @@ import { uid } from '../utils/id'
 
 const FOOD_EMOJI = ['🍖', '🍢', '🍗', '🥩', '🌭', '🍤']
 const GRADIENTS: [string, string][] = [
-  ['#E14D2A', '#F4A340'],
-  ['#C13A1B', '#E14D2A'],
-  ['#F2775A', '#F4A340'],
-  ['#DB8A28', '#E14D2A'],
+  ['#3C2018', '#869247'],
+  ['#26140E', '#3C2018'],
+  ['#6B4636', '#869247'],
+  ['#5C6B2E', '#869247'],
 ]
 
 function escapeXml(text: string): string {

@@ -28,18 +28,38 @@ const PLATFORM_GUIDANCE: Partial<Record<Platform, string>> = {
   wechat_group: '微信群通知：直接告知型，简洁明了，突出到店行动号召（比如"到店即可点"）',
 }
 
+// Heuristic: does the promotion object read as an ambiance/occasion subject
+// (门店氛围/下班小聚/生日聚会 and similar free-text) rather than a specific
+// dish/combo? Free text from the user can't be perfectly classified, but a
+// keyword hint plus an explicit negative constraint makes the model actually
+// follow the "don't describe dish taste" instruction — a softer "if X then Y"
+// phrasing wasn't strong enough (verified: ambiance-subject copy still
+// described specific cuts/taste almost as much as dish-subject copy did).
+const AMBIANCE_KEYWORDS = ['氛围', '场景', '聚会', '小聚', '生日', '环境', '下班', '约会', '节日', '周年']
+
 function buildContentCopyPrompt(input: ContentPlanInput): string {
   const platformList = input.platforms.map((p) => PLATFORM_LABEL[p]).join('、')
+  const isAmbianceSubject = AMBIANCE_KEYWORDS.some((kw) => input.promotionObject.includes(kw))
 
   const lines = [
     `你是"${BRAND_NAME}"品牌的社交媒体文案专家。`,
     BRAND_DESCRIPTION,
     '',
     `推广对象：${input.promotionObject}`,
-    '如果推广对象是具体菜品或套餐，文案应聚焦口感、食材、卖点等具体细节；如果推广对象是氛围、场景或时段类（比如门店氛围、下班小聚、生日聚会），文案应聚焦环境、心情、社交体验，不要生硬地描述"口感"。',
-    '',
-    `需要为以下渠道分别生成文案：${platformList}。每个渠道的语气、结构、长度要有明显区别，不能是同一段话换个开头：`,
   ]
+
+  if (isAmbianceSubject) {
+    lines.push(
+      '这次推广对象是氛围/场景/聚会类，不是具体某道菜。文案重点要写：门店环境装修、灯光氛围、桌边代烤的热闹感、朋友/家人围炉社交互动、适合的场合心情。' +
+        '【不要】具体描述某道菜的口感、部位或烹饪细节（比如不要写"雪花牛肉入口即化"这种菜品测评式句子），"烤肉"作为背景提一下即可，重点始终是氛围和体验，不是菜品测评。',
+    )
+  } else {
+    lines.push(
+      '这次推广对象是具体菜品/套餐，文案要具体描述这道菜的口感、食材、烹饪方式、卖点，让读者看了就想吃，不要泛泛而谈。',
+    )
+  }
+
+  lines.push('', `需要为以下渠道分别生成文案：${platformList}。每个渠道的语气、结构、长度要有明显区别，不能是同一段话换个开头：`)
   input.platforms.forEach((p) => {
     const guidance = PLATFORM_GUIDANCE[p]
     if (guidance) lines.push(`- ${guidance}`)
